@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: calculatepoint
-          image: "username/calculatepoint:latest"
+          image: "namahoon/calculatepoint:24100801"
           ports:
             - containerPort: 8080
           readinessProbe:
