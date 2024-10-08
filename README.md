@@ -1,118 +1,3 @@
-
-# 
-
-## Model
-www.msaez.io/#/53361445/storming/walkingstudio
-
-## Before Running Services
-### Make sure there is a Kafka server running
-```
-cd kafka
-docker-compose up
-```
-- Check the Kafka messages:
-```
-cd infra
-docker-compose exec -it kafka /bin/bash
-cd /bin
-./kafka-console-consumer --bootstrap-server localhost:9092 --topic
-```
-
-## Run the backend micro-services
-See the README.md files inside the each microservices directory:
-
-- walkinghistory
-- weather
-- user
-- userwalkingstat
-- teamwalkingstat
-- companywalkingstat
-- challenge
-- calculatepoint
-
-
-## Run API Gateway (Spring Gateway)
-```
-cd gateway
-mvn spring-boot:run
-```
-
-## Test by API
-- walkinghistory
-```
- http :8088/walkingHsts pUserId="p_user_id" teamId="team_id" comId="com_id" baseDate="base_date" baseTime="base_time" walking="walking" 
-```
-- weather
-```
- http :8088/usrtFcstHsts baseDate="base_date" baseTime="base_time" nx="nx" ny="ny" category="category" fcstDate="fcst_date" fcstTime="fcst_time" fcstValue="fcst_value" 
- http :8088/weatherStnInfos id="id" divisionLevel1="division_level1" divisionLevel2="division_level2" nx="nx" ny="ny" 
-```
-- user
-```
- http :8088/users pUserId="p_user_id" pUserName="p_user_name" comId="com_id" teamId="team_id" otp="otp" point="point" 
-```
-- userwalkingstat
-```
- http :8088/walkingStatByUsers pUserId="p_user_id" baseDate="base_date" walking="walking" ranking="ranking" 
-```
-- teamwalkingstat
-```
- http :8088/walkingStatByTeams teamId="team_id" baseDate="base_date" walking="walking" ranking="ranking" 
-```
-- companywalkingstat
-```
- http :8088/walkingStatByCompanies comId="com_id" baseDate="base_date" walking="walking" ranking="ranking" 
-```
-- challenge
-```
- http :8088/challengeInfos challengeId="challenge_id" missionStDt="mission_st_dt" missionFnDt="mission_fn_dt" range="range" point="point" 
- http :8088/challengeHsts challengeId="challenge_id" pUserId="p_user_id" rewardDt="reward_dt" rewardYn="reward_yn" 
-```
-- calculatepoint
-```
- http :8088/pointStandardInfos baseDate="base_date" baseTime="base_time" nx="nx" ny="ny" weight="weight" 
-```
-
-
-## Run the frontend
-```
-cd frontend
-npm i
-npm run serve
-```
-
-## Test by UI
-Open a browser to localhost:8088
-
-## Required Utilities
-
-- httpie (alternative for curl / POSTMAN) and network utils
-```
-sudo apt-get update
-sudo apt-get install net-tools
-sudo apt install iputils-ping
-pip install httpie
-```
-
-- kubernetes utilities (kubectl)
-```
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-```
-
-- aws cli (aws)
-```
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-```
-
-- eksctl 
-```
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
-```
-=======
 # 워킹 스튜디오
 
 ## 워킹 스튜디오(Walking Studio)
@@ -137,16 +22,16 @@ sudo mv /tmp/eksctl /usr/local/bin
 
 ### 비기능적 요구사항
 1. 트랜잭션
-- 챌린지 보상에 대한 포인트를 요청 받았을 때, 개인/팀/기업의 walking stat 서버와 Req/Res(Query for Aggregate)로 현재 실제 걸음 수를 확인됐을 때만 보상을 제공합니다.
+- 챌린지 보상에 대한 포인트를 요청 받았을 때, 개인/팀/기업의 walking stat 서버와 Req/Resp(Query for Aggregate)로 현재 실제 걸음 수를 확인됐을 때만 보상을 제공합니다.
 
 2. 장애격리
 - 개인/팀/기업별 걸음 통계 정보 중 특정 정보가 조회되지 않더라도 나머지 정보에 대해서는 조회가 가능해야 합니다.
-- 수집서버와 ETL성 통계 적재 서버는 분리되어야 한다.
-- 수집서버에 대해서는 접속량에 비례하여 자원이 유동적으로 할당되어야 한다.
+- 수집서버와 ETL성 통계 적재 서버는 분리되어야 합니다.
+- 수집서버에 대해서는 접속량에 비례하여 자원이 유동적으로 할당되어야 합니다.
 
 3. 성능
-- 총 유저 수를 10,000명으로 가정하고, 시스템은 최소 초당 10,000개의 요청을 처리할 수 있어야 한다.
-- 클라이언트 동시접속자를 1,000명으로 가정하고, 조회서버가 지연없이 요청을 처리할 수 있어야 한다.
+- 총 유저 수를 10,000명으로 가정하고, 시스템은 최소 초당 10,000개의 요청을 처리할 수 있어야 합니다.
+- 클라이언트 동시접속자를 1,000명으로 가정하고, 조회 서버가 지연없이 요청을 처리할 수 있어야 합니다.
 
 ## 체크포인트
 
@@ -169,46 +54,81 @@ sudo mv /tmp/eksctl /usr/local/bin
     - 신규 서비스를 추가 하였을때 기존 서비스의 데이터베이스에 영향이 없도록 설계(열려있는 아키택처)할 수 있는가?
     - 이벤트와 폴리시를 연결하기 위한 Correlation-key 연결을 제대로 설계하였는가?
 
-구현
+#### 구현
 
-[DDD] 분석단계에서의 스티커별 색상과 헥사고날 아키텍처에 따라 구현체가 매핑되게 개발되었는가?
+- [DDD] 분석단계에서의 스티커별 색상과 헥사고날 아키텍처에 따라 구현체가 매핑되게 개발되었는가?
+    - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 데이터 접근 어댑터를 개발하였는가
+    - [헥사고날 아키텍처] REST Inbound adaptor 이외에 gRPC 등의 Inbound Adaptor 를 추가함에 있어서 도메인 모델의 손상을 주지 않고 새로운 프로토콜에 기존 구현체를 적응시킬 수 있는가?
+    - 분석단계에서의 유비쿼터스 랭귀지 (업무현장에서 쓰는 용어) 를 사용하여 소스코드가 서술되었는가?
+- Request-Response 방식의 서비스 중심 아키텍처 구현
+    - 마이크로 서비스간 Request-Response 호출에 있어 대상 서비스를 어떠한 방식으로 찾아서 호출 하였는가? (Service Discovery, REST, FeignClient)
+    - 서킷브레이커를 통하여  장애를 격리시킬 수 있는가?
+- 이벤트 드리븐 아키텍처의 구현
+    - 카프카를 이용하여 PubSub 으로 하나 이상의 서비스가 연동되었는가?
+    - Correlation-key: 각 이벤트 건 (메시지)가 어떠한 폴리시를 처리할때 어떤 건에 연결된 처리건인지를 구별하기 위한 Correlation-key 연결을 제대로 구현 하였는가?
+    - Message Consumer 마이크로서비스가 장애상황에서 수신받지 못했던 기존 이벤트들을 다시 수신받아 처리하는가?
+    - Scaling-out: Message Consumer 마이크로서비스의 Replica 를 추가했을때 중복없이 이벤트를 수신할 수 있는가
+    - CQRS: Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능한가?
+- 폴리글랏 플로그래밍
+    - 각 마이크로 서비스들이 하나이상의 각자의 기술 Stack 으로 구성되었는가?
+    - 각 마이크로 서비스들이 각자의 저장소 구조를 자율적으로 채택하고 각자의 저장소 유형 (RDB, NoSQL, File System 등)을 선택하여 구현하였는가?
+- API 게이트웨이
+    - API GW를 통하여 마이크로 서비스들의 집입점을 통일할 수 있는가?
+    - 게이트웨이와 인증서버(OAuth), JWT 토큰 인증을 통하여 마이크로서비스들을 보호할 수 있는가?
 
-Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 데이터 접근 어댑터를 개발하였는가
-[헥사고날 아키텍처] REST Inbound adaptor 이외에 gRPC 등의 Inbound Adaptor 를 추가함에 있어서 도메인 모델의 손상을 주지 않고 새로운 프로토콜에 기존 구현체를 적응시킬 수 있는가?
-분석단계에서의 유비쿼터스 랭귀지 (업무현장에서 쓰는 용어) 를 사용하여 소스코드가 서술되었는가?
-Request-Response 방식의 서비스 중심 아키텍처 구현
+#### 운영
 
-마이크로 서비스간 Request-Response 호출에 있어 대상 서비스를 어떠한 방식으로 찾아서 호출 하였는가? (Service Discovery, REST, FeignClient)
-서킷브레이커를 통하여  장애를 격리시킬 수 있는가?
-이벤트 드리븐 아키텍처의 구현
+- SLA 준수
+    - 셀프힐링: Liveness Probe 를 통하여 어떠한 서비스의 health 상태가 지속적으로 저하됨에 따라 어떠한 임계치에서 pod 가 재생되는 것을 증명할 수 있는가?
+    - 서킷브레이커, 레이트리밋 등을 통한 장애격리와 성능효율을 높힐 수 있는가?
+    - 오토스케일러 (HPA) 를 설정하여 확장적 운영이 가능한가?
+    - 모니터링, 앨럿팅:
 
-카프카를 이용하여 PubSub 으로 하나 이상의 서비스가 연동되었는가?
-Correlation-key: 각 이벤트 건 (메시지)가 어떠한 폴리시를 처리할때 어떤 건에 연결된 처리건인지를 구별하기 위한 Correlation-key 연결을 제대로 구현 하였는가?
-Message Consumer 마이크로서비스가 장애상황에서 수신받지 못했던 기존 이벤트들을 다시 수신받아 처리하는가?
-Scaling-out: Message Consumer 마이크로서비스의 Replica 를 추가했을때 중복없이 이벤트를 수신할 수 있는가
-CQRS: Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능한가?
-폴리글랏 플로그래밍
+- 무정지 운영 CI/CD
+    - Readiness Probe 의 설정과 Rolling update을 통하여 신규 버전이 완전히 서비스를 받을 수 있는 상태일때 신규버전의 서비스로 전환됨을 siege 등으로 증명
+    - Contract Test : 자동화된 경계 테스트를 통하여 구현 오류나 API 계약위반를 미리 차단 가능한가?
 
-각 마이크로 서비스들이 하나이상의 각자의 기술 Stack 으로 구성되었는가?
-각 마이크로 서비스들이 각자의 저장소 구조를 자율적으로 채택하고 각자의 저장소 유형 (RDB, NoSQL, File System 등)을 선택하여 구현하였는가?
-API 게이트웨이
+## 분석/설계
+#### AS-IS 조직 (Horizontally-Aligned)
+<img width="1202" alt="AS-IS 조직" src="https://github.com/user-attachments/assets/1f905e12-8a71-438b-9ad0-361cde1d2ef4">
 
-API GW를 통하여 마이크로 서비스들의 집입점을 통일할 수 있는가?
-게이트웨이와 인증서버(OAuth), JWT 토큰 인증을 통하여 마이크로서비스들을 보호할 수 있는가?
-운영
+#### TO-BE 조직 (Vertically-Aligned)
+<img width="1038" alt="TO-BE 조직" src="https://github.com/user-attachments/assets/7a79c590-82ef-4b16-8dce-8c8aafa1caff">
 
-SLA 준수
+### EventStorming 결과
+[MSAEz 로 모델링한 이벤트스토밍 결과](https://www.msaez.io/#/53361445/storming/walkingstudio)
 
-셀프힐링: Liveness Probe 를 통하여 어떠한 서비스의 health 상태가 지속적으로 저하됨에 따라 어떠한 임계치에서 pod 가 재생되는 것을 증명할 수 있는가?
-서킷브레이커, 레이트리밋 등을 통한 장애격리와 성능효율을 높힐 수 있는가?
-오토스케일러 (HPA) 를 설정하여 확장적 운영이 가능한가?
-모니터링, 앨럿팅:
-무정지 운영 CI/CD (10)
+#### 이벤트 도출
+<img width="1120" alt="이벤트 도출" src="https://github.com/user-attachments/assets/3da580ce-241f-4822-b5e9-a3187ffa810e">
 
-Readiness Probe 의 설정과 Rolling update을 통하여 신규 버전이 완전히 서비스를 받을 수 있는 상태일때 신규버전의 서비스로 전환됨을 siege 등으로 증명
-Contract Test : 자동화된 경계 테스트를 통하여 구현 오류나 API 계약위반를 미리 차단 가능한가?
+#### 부적격 이벤트 탈락
+<img width="1102" alt="부적격 이벤트 탈락" src="https://github.com/user-attachments/assets/141045fa-7f9e-491e-acff-9ce956ebfb79">
 
-## 분석/설게
+- 과정 중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행합니다.
+    - LoginSuccessed : 로그인에 관련된 이벤트는 제외
+    - TimePassed : 시간의 흐름(ex. 주기적인 동작)마다 일어나는 경우 Policy 로 대체
+    - StatSearched : UI의 이벤트지, 업무적인 이벤트가 아님으로 제외
+
+#### Actor, Command, Policy 부착하여 읽기 좋게
+<img width="1429" alt="액터 커맨드 폴리시 붙이기" src="https://github.com/user-attachments/assets/662ddc81-2cae-4f56-a698-56dbd992bce1">
+
+#### Aggregate 으로 묶기
+<img width="1384" alt="Aggregate로 묶기" src="https://github.com/user-attachments/assets/8ac64f55-91da-4c74-bdfc-d1579dae02fd">
+
+- WalkingHst, WalkingStatByUser/Team/Company, Weather, PointStandardInfo, User, Challenge 은 command, policy, event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 묶었습니다.
+
+#### Bounded Context 로 묶기
+<img width="1258" alt="Bounded Context 로 묶기" src="https://github.com/user-attachments/assets/b311691f-bd81-475c-902b-4827b2729469">
+
+- 각기 다른 서버로 관리되어야 한다고 생각되는 주체끼리 bounded context 로 묶었습니다.
+
+#### 컨택스트 매핑 후 완성본(점선은 Pub/Sub, 실선은 Req/Resp)
+<img width="940" alt="완성본" src="https://github.com/user-attachments/assets/8f811b40-6c52-4a37-a099-5467a4adfeb9">
+
+- get reward 커맨드가 요청됐을 때, Req/Resp 로 Query for Aggregate 인 check walking count 로직을 수행합니다.
+    - 도전 과제를 달성하고 포인트(보상)를 요청했을 떄, 악의적인 요청을 방지하기 위해 서버에 저장된 걸음 수와 일치하는지 동기적으로 확인합니다.
+    - 사용자에게 보여지는 포인트가 증가됐다가 감소했다가 하는 경우가 생기면 안된다고 판단해서, 비동기로 처리해서 일단 포인트를 증가시키고 문제 발생 시 보상 트랜잭션으로 구현하지 않았습니다.
+- 그 외 이벤트는 Pub/Sub 을 이용한 비동기 처리를 통해 결합도를 감소시켰습니다.
 
 ## 구현
 
