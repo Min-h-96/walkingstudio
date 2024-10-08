@@ -1,5 +1,6 @@
 package walkingstudio.domain;
 
+import java.util.Optional;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import walkingstudio.domain.*;
@@ -10,4 +11,6 @@ import walkingstudio.domain.*;
     path = "walkingHsts"
 )
 public interface WalkingHstRepository
-    extends PagingAndSortingRepository<WalkingHst, String> {}
+    extends PagingAndSortingRepository<WalkingHst, WalkingHstId> {
+  Optional<WalkingHst> findBypUserIdAndBaseDateAndBaseTime(String pUserId, String baseDate, String baseTime);
+}

@@ -4,15 +4,24 @@ server:
 spring:
   application:
     name: walkinghistory
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://20.214.122.140:5432/walkingstudio
+    username: user10
+    password: new1234!
 ---
 
 spring:
   profiles: default
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
+        default_schema: walk
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
   cloud:
     stream:
