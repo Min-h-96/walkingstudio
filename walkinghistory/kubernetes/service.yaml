@@ -5,6 +5,7 @@ metadata:
   labels:
     app: walkinghistory
 spec:
+  type: LoadBalancer  # 외부 접근을 위한 LoadBalancer 타입 설정
   ports:
     - port: 8080
       targetPort: 8080
