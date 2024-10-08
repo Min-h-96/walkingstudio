@@ -20,14 +20,14 @@ cd /bin
 ## Run the backend micro-services
 See the README.md files inside the each microservices directory:
 
-- walking history
+- walkinghistory
 - weather
 - user
-- user walking stat
-- team walking stat
-- company walking stat
+- userwalkingstat
+- teamwalkingstat
+- companywalkingstat
 - challenge
-- calculate point
+- calculatepoint
 
 
 ## Run API Gateway (Spring Gateway)
@@ -37,7 +37,7 @@ mvn spring-boot:run
 ```
 
 ## Test by API
-- walking history
+- walkinghistory
 ```
  http :8088/walkingHsts pUserId="p_user_id" teamId="team_id" comId="com_id" baseDate="base_date" baseTime="base_time" walking="walking" 
 ```
@@ -50,15 +50,15 @@ mvn spring-boot:run
 ```
  http :8088/users pUserId="p_user_id" pUserName="p_user_name" comId="com_id" teamId="team_id" otp="otp" point="point" 
 ```
-- user walking stat
+- userwalkingstat
 ```
  http :8088/walkingStatByUsers pUserId="p_user_id" baseDate="base_date" walking="walking" ranking="ranking" 
 ```
-- team walking stat
+- teamwalkingstat
 ```
  http :8088/walkingStatByTeams teamId="team_id" baseDate="base_date" walking="walking" ranking="ranking" 
 ```
-- company walking stat
+- companywalkingstat
 ```
  http :8088/walkingStatByCompanies comId="com_id" baseDate="base_date" walking="walking" ranking="ranking" 
 ```
@@ -67,7 +67,7 @@ mvn spring-boot:run
  http :8088/challengeInfos challengeId="challenge_id" missionStDt="mission_st_dt" missionFnDt="mission_fn_dt" range="range" point="point" 
  http :8088/challengeHsts challengeId="challenge_id" pUserId="p_user_id" rewardDt="reward_dt" rewardYn="reward_yn" 
 ```
-- calculate point
+- calculatepoint
 ```
  http :8088/pointStandardInfos baseDate="base_date" baseTime="base_time" nx="nx" ny="ny" weight="weight" 
 ```

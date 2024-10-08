@@ -3,22 +3,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: walking history
+  name: walkinghistory
   labels:
-    app: walking history
+    app: walkinghistory
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: walking history
+      app: walkinghistory
   template:
     metadata:
       labels:
-        app: walking history
+        app: walkinghistory
     spec:
       containers:
-        - name: walking history
-          image: username/walking history:latest
+        - name: walkinghistory
+          image: username/walkinghistory:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -123,22 +123,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user walking stat
+  name: userwalkingstat
   labels:
-    app: user walking stat
+    app: userwalkingstat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user walking stat
+      app: userwalkingstat
   template:
     metadata:
       labels:
-        app: user walking stat
+        app: userwalkingstat
     spec:
       containers:
-        - name: user walking stat
-          image: username/user walking stat:latest
+        - name: userwalkingstat
+          image: username/userwalkingstat:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -163,22 +163,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: team walking stat
+  name: teamwalkingstat
   labels:
-    app: team walking stat
+    app: teamwalkingstat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: team walking stat
+      app: teamwalkingstat
   template:
     metadata:
       labels:
-        app: team walking stat
+        app: teamwalkingstat
     spec:
       containers:
-        - name: team walking stat
-          image: username/team walking stat:latest
+        - name: teamwalkingstat
+          image: username/teamwalkingstat:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -203,22 +203,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: company walking stat
+  name: companywalkingstat
   labels:
-    app: company walking stat
+    app: companywalkingstat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: company walking stat
+      app: companywalkingstat
   template:
     metadata:
       labels:
-        app: company walking stat
+        app: companywalkingstat
     spec:
       containers:
-        - name: company walking stat
-          image: username/company walking stat:latest
+        - name: companywalkingstat
+          image: username/companywalkingstat:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -283,22 +283,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: calculate point
+  name: calculatepoint
   labels:
-    app: calculate point
+    app: calculatepoint
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: calculate point
+      app: calculatepoint
   template:
     metadata:
       labels:
-        app: calculate point
+        app: calculatepoint
     spec:
       containers:
-        - name: calculate point
-          image: username/calculate point:latest
+        - name: calculatepoint
+          image: username/calculatepoint:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -325,15 +325,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: walking history
+  name: walkinghistory
   labels:
-    app: walking history
+    app: walkinghistory
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: walking history
+    app: walkinghistory
 
 
 ---
@@ -376,15 +376,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user walking stat
+  name: userwalkingstat
   labels:
-    app: user walking stat
+    app: userwalkingstat
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: user walking stat
+    app: userwalkingstat
 
 
 ---
@@ -393,15 +393,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: team walking stat
+  name: teamwalkingstat
   labels:
-    app: team walking stat
+    app: teamwalkingstat
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: team walking stat
+    app: teamwalkingstat
 
 
 ---
@@ -410,15 +410,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: company walking stat
+  name: companywalkingstat
   labels:
-    app: company walking stat
+    app: companywalkingstat
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: company walking stat
+    app: companywalkingstat
 
 
 ---
@@ -444,13 +444,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: calculate point
+  name: calculatepoint
   labels:
-    app: calculate point
+    app: calculatepoint
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: calculate point
+    app: calculatepoint
 

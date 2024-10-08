@@ -29,24 +29,24 @@ jobs:
       
       - name: Build Maven Projects
         run: |
-          mvn clean package -f ./walking history/pom.xml
+          mvn clean package -f ./walkinghistory/pom.xml
           mvn clean package -f ./weather/pom.xml
           mvn clean package -f ./user/pom.xml
-          mvn clean package -f ./user walking stat/pom.xml
-          mvn clean package -f ./team walking stat/pom.xml
-          mvn clean package -f ./company walking stat/pom.xml
+          mvn clean package -f ./userwalkingstat/pom.xml
+          mvn clean package -f ./teamwalkingstat/pom.xml
+          mvn clean package -f ./companywalkingstat/pom.xml
           mvn clean package -f ./challenge/pom.xml
-          mvn clean package -f ./calculate point/pom.xml
+          mvn clean package -f ./calculatepoint/pom.xml
 
-      - name: Docker Build and push for WalkingHistory
+      - name: Docker Build and push for Walkinghistory
         uses: docker/build-push-action@v4
         with:
-          context: ./walking history
+          context: ./walkinghistory
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/walking-history:latest
-            ghcr.io/${{ github.repository }}/walking-history:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/walkinghistory:latest
+            ghcr.io/${{ github.repository }}/walkinghistory:${{ github.ref_name }}
             
       - name: Docker Build and push for Weather
         uses: docker/build-push-action@v4
@@ -68,35 +68,35 @@ jobs:
             ghcr.io/${{ github.repository }}/user:latest
             ghcr.io/${{ github.repository }}/user:${{ github.ref_name }}
             
-      - name: Docker Build and push for UserWalkingStat
+      - name: Docker Build and push for Userwalkingstat
         uses: docker/build-push-action@v4
         with:
-          context: ./user walking stat
+          context: ./userwalkingstat
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/user-walking-stat:latest
-            ghcr.io/${{ github.repository }}/user-walking-stat:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/userwalkingstat:latest
+            ghcr.io/${{ github.repository }}/userwalkingstat:${{ github.ref_name }}
             
-      - name: Docker Build and push for TeamWalkingStat
+      - name: Docker Build and push for Teamwalkingstat
         uses: docker/build-push-action@v4
         with:
-          context: ./team walking stat
+          context: ./teamwalkingstat
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/team-walking-stat:latest
-            ghcr.io/${{ github.repository }}/team-walking-stat:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/teamwalkingstat:latest
+            ghcr.io/${{ github.repository }}/teamwalkingstat:${{ github.ref_name }}
             
-      - name: Docker Build and push for CompanyWalkingStat
+      - name: Docker Build and push for Companywalkingstat
         uses: docker/build-push-action@v4
         with:
-          context: ./company walking stat
+          context: ./companywalkingstat
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/company-walking-stat:latest
-            ghcr.io/${{ github.repository }}/company-walking-stat:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/companywalkingstat:latest
+            ghcr.io/${{ github.repository }}/companywalkingstat:${{ github.ref_name }}
             
       - name: Docker Build and push for Challenge
         uses: docker/build-push-action@v4
@@ -108,13 +108,13 @@ jobs:
             ghcr.io/${{ github.repository }}/challenge:latest
             ghcr.io/${{ github.repository }}/challenge:${{ github.ref_name }}
             
-      - name: Docker Build and push for CalculatePoint
+      - name: Docker Build and push for Calculatepoint
         uses: docker/build-push-action@v4
         with:
-          context: ./calculate point
+          context: ./calculatepoint
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/calculate-point:latest
-            ghcr.io/${{ github.repository }}/calculate-point:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/calculatepoint:latest
+            ghcr.io/${{ github.repository }}/calculatepoint:${{ github.ref_name }}
             

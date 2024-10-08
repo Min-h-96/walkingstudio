@@ -37,7 +37,7 @@
                     <v-list-item
                         class="px-2"
                         key="walkingHsts"
-                        to="/walkingHistories/walkingHsts"
+                        to="/walkinghistories/walkingHsts"
                         @click="changeUrl()"
                         color="primary"
                         style="font-weight:700;"
@@ -84,7 +84,7 @@
                     <v-list-item
                         class="px-2"
                         key="walkingStatByUsers"
-                        to="/userWalkingStats/walkingStatByUsers"
+                        to="/userwalkingstats/walkingStatByUsers"
                         @click="changeUrl()"
                         color="primary"
                         style="font-weight:700;"
@@ -96,7 +96,7 @@
                     <v-list-item
                         class="px-2"
                         key="walkingStatByTeams"
-                        to="/teamWalkingStats/walkingStatByTeams"
+                        to="/teamwalkingstats/walkingStatByTeams"
                         @click="changeUrl()"
                         color="primary"
                         style="font-weight:700;"
@@ -108,7 +108,7 @@
                     <v-list-item
                         class="px-2"
                         key="walkingStatByCompanies"
-                        to="/companyWalkingStats/walkingStatByCompanies"
+                        to="/companywalkingstats/walkingStatByCompanies"
                         @click="changeUrl()"
                         color="primary"
                         style="font-weight:700;"
@@ -143,7 +143,7 @@
                     <v-list-item
                         class="px-2"
                         key="pointStandardInfos"
-                        to="/calculatePoints/pointStandardInfos"
+                        to="/calculatepoints/pointStandardInfos"
                         @click="changeUrl()"
                         color="primary"
                         style="font-weight:700;"
@@ -234,7 +234,7 @@ export default {
                 title: 'WalkingHst', 
                 description: '', 
                 key: 'walkingHsts', 
-                route: '/walkingHistories/walkingHsts',
+                route: '/walkinghistories/walkingHsts',
                 ImageUrl: '',
             },
             { 
@@ -262,21 +262,21 @@ export default {
                 title: 'WalkingStatByUser', 
                 description: '', 
                 key: 'walkingStatByUsers', 
-                route: '/userWalkingStats/walkingStatByUsers',
+                route: '/userwalkingstats/walkingStatByUsers',
                 ImageUrl: '',
             },
             { 
                 title: 'WalkingStatByTeam', 
                 description: '', 
                 key: 'walkingStatByTeams', 
-                route: '/teamWalkingStats/walkingStatByTeams',
+                route: '/teamwalkingstats/walkingStatByTeams',
                 ImageUrl: '',
             },
             { 
                 title: 'WalkingStatByCompany', 
                 description: '', 
                 key: 'walkingStatByCompanies', 
-                route: '/companyWalkingStats/walkingStatByCompanies',
+                route: '/companywalkingstats/walkingStatByCompanies',
                 ImageUrl: '',
             },
             { 
@@ -297,7 +297,7 @@ export default {
                 title: 'PointStandardInfo', 
                 description: '', 
                 key: 'pointStandardInfos', 
-                route: '/calculatePoints/pointStandardInfos',
+                route: '/calculatepoints/pointStandardInfos',
                 ImageUrl: '',
             },
             

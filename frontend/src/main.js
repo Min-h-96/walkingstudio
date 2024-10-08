@@ -45,23 +45,23 @@ templateFiles.keys().forEach(function(tempFiles) {
 Vue.use(Managing);
 const pluralCaseList = []
 
-pluralCaseList.push( {plural: "walkingHistories/walkingHsts", pascal: "WalkingHistoryWalkingHst"} )
+pluralCaseList.push( {plural: "walkinghistories/walkingHsts", pascal: "WalkinghistoryWalkingHst"} )
 
 pluralCaseList.push( {plural: "weathers/usrtFcstHsts", pascal: "WeatherUsrtFcstHst"} )
 pluralCaseList.push( {plural: "weathers/weatherStnInfos", pascal: "WeatherWeatherStnInfo"} )
 
 pluralCaseList.push( {plural: "users/users", pascal: "UserUser"} )
 
-pluralCaseList.push( {plural: "userWalkingStats/walkingStatByUsers", pascal: "UserWalkingStatWalkingStatByUser"} )
+pluralCaseList.push( {plural: "userwalkingstats/walkingStatByUsers", pascal: "UserwalkingstatWalkingStatByUser"} )
 
-pluralCaseList.push( {plural: "teamWalkingStats/walkingStatByTeams", pascal: "TeamWalkingStatWalkingStatByTeam"} )
+pluralCaseList.push( {plural: "teamwalkingstats/walkingStatByTeams", pascal: "TeamwalkingstatWalkingStatByTeam"} )
 
-pluralCaseList.push( {plural: "companyWalkingStats/walkingStatByCompanies", pascal: "CompanyWalkingStatWalkingStatByCompany"} )
+pluralCaseList.push( {plural: "companywalkingstats/walkingStatByCompanies", pascal: "CompanywalkingstatWalkingStatByCompany"} )
 
 pluralCaseList.push( {plural: "challenges/challengeInfos", pascal: "ChallengeChallengeInfo"} )
 pluralCaseList.push( {plural: "challenges/challengeHsts", pascal: "ChallengeChallengeHst"} )
 
-pluralCaseList.push( {plural: "calculatePoints/pointStandardInfos", pascal: "CalculatePointPointStandardInfo"} )
+pluralCaseList.push( {plural: "calculatepoints/pointStandardInfos", pascal: "CalculatepointPointStandardInfo"} )
 
 
 Vue.prototype.$ManagerLists.forEach(function(item, idx) {

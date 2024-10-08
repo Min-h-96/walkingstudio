@@ -23,7 +23,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
-  walking history:
+  walkinghistory:
     depends_on: 
       - kafka
     image: adoptopenjdk/maven-openjdk11:latest
@@ -34,7 +34,7 @@ services:
       - 8082:8082
     working_dir: /usr/src
     volumes:
-      - ./walking history:/usr/src
+      - ./walkinghistory:/usr/src
       - ./maven-repo:/root/.m2
       
   weather:
@@ -65,7 +65,7 @@ services:
       - ./user:/usr/src
       - ./maven-repo:/root/.m2
       
-  user walking stat:
+  userwalkingstat:
     depends_on: 
       - kafka
     image: adoptopenjdk/maven-openjdk11:latest
@@ -76,10 +76,10 @@ services:
       - 8085:8085
     working_dir: /usr/src
     volumes:
-      - ./user walking stat:/usr/src
+      - ./userwalkingstat:/usr/src
       - ./maven-repo:/root/.m2
       
-  team walking stat:
+  teamwalkingstat:
     depends_on: 
       - kafka
     image: adoptopenjdk/maven-openjdk11:latest
@@ -90,10 +90,10 @@ services:
       - 8086:8086
     working_dir: /usr/src
     volumes:
-      - ./team walking stat:/usr/src
+      - ./teamwalkingstat:/usr/src
       - ./maven-repo:/root/.m2
       
-  company walking stat:
+  companywalkingstat:
     depends_on: 
       - kafka
     image: adoptopenjdk/maven-openjdk11:latest
@@ -104,7 +104,7 @@ services:
       - 8087:8087
     working_dir: /usr/src
     volumes:
-      - ./company walking stat:/usr/src
+      - ./companywalkingstat:/usr/src
       - ./maven-repo:/root/.m2
       
   challenge:
@@ -121,7 +121,7 @@ services:
       - ./challenge:/usr/src
       - ./maven-repo:/root/.m2
       
-  calculate point:
+  calculatepoint:
     depends_on: 
       - kafka
     image: adoptopenjdk/maven-openjdk11:latest
@@ -132,6 +132,6 @@ services:
       - 8089:8089
     working_dir: /usr/src
     volumes:
-      - ./calculate point:/usr/src
+      - ./calculatepoint:/usr/src
       - ./maven-repo:/root/.m2
       
