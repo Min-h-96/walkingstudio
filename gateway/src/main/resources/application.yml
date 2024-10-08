@@ -9,7 +9,7 @@ spring:
     gateway:
 #<<< API Gateway / Routes
       routes:
-        - id: walking history
+        - id: walkinghistory
           uri: http://localhost:8082
           predicates:
             - Path=/walkingHsts/**, 
@@ -21,15 +21,15 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/users/**, 
-        - id: user walking stat
+        - id: userwalkingstat
           uri: http://localhost:8085
           predicates:
             - Path=/walkingStatByUsers/**, 
-        - id: team walking stat
+        - id: teamwalkingstat
           uri: http://localhost:8086
           predicates:
             - Path=/walkingStatByTeams/**, 
-        - id: company walking stat
+        - id: companywalkingstat
           uri: http://localhost:8087
           predicates:
             - Path=/walkingStatByCompanies/**, 
@@ -37,7 +37,7 @@ spring:
           uri: http://localhost:8088
           predicates:
             - Path=/challengeInfos/**, /challengeHsts/**, 
-        - id: calculate point
+        - id: calculatepoint
           uri: http://localhost:8089
           predicates:
             - Path=/pointStandardInfos/**, 
@@ -65,8 +65,8 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: walking history
-          uri: http://walkingHistory:8080
+        - id: walkinghistory
+          uri: http://walkinghistory:8080
           predicates:
             - Path=/walkingHsts/**, 
         - id: weather
@@ -77,24 +77,24 @@ spring:
           uri: http://user:8080
           predicates:
             - Path=/users/**, 
-        - id: user walking stat
-          uri: http://userWalkingStat:8080
+        - id: userwalkingstat
+          uri: http://userwalkingstat:8080
           predicates:
             - Path=/walkingStatByUsers/**, 
-        - id: team walking stat
-          uri: http://teamWalkingStat:8080
+        - id: teamwalkingstat
+          uri: http://teamwalkingstat:8080
           predicates:
             - Path=/walkingStatByTeams/**, 
-        - id: company walking stat
-          uri: http://companyWalkingStat:8080
+        - id: companywalkingstat
+          uri: http://companywalkingstat:8080
           predicates:
             - Path=/walkingStatByCompanies/**, 
         - id: challenge
           uri: http://challenge:8080
           predicates:
             - Path=/challengeInfos/**, /challengeHsts/**, 
-        - id: calculate point
-          uri: http://calculatePoint:8080
+        - id: calculatepoint
+          uri: http://calculatepoint:8080
           predicates:
             - Path=/pointStandardInfos/**, 
         - id: frontend

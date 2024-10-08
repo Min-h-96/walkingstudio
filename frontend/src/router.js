@@ -5,8 +5,8 @@ import Router from 'vue-router'
 Vue.use(Router);
 
 
-import WalkingHistoryWalkingHstManager from "./components/listers/WalkingHistoryWalkingHstCards"
-import WalkingHistoryWalkingHstDetail from "./components/listers/WalkingHistoryWalkingHstDetail"
+import WalkinghistoryWalkingHstManager from "./components/listers/WalkinghistoryWalkingHstCards"
+import WalkinghistoryWalkingHstDetail from "./components/listers/WalkinghistoryWalkingHstDetail"
 
 import WeatherUsrtFcstHstManager from "./components/listers/WeatherUsrtFcstHstCards"
 import WeatherUsrtFcstHstDetail from "./components/listers/WeatherUsrtFcstHstDetail"
@@ -16,22 +16,22 @@ import WeatherWeatherStnInfoDetail from "./components/listers/WeatherWeatherStnI
 import UserUserManager from "./components/listers/UserUserCards"
 import UserUserDetail from "./components/listers/UserUserDetail"
 
-import UserWalkingStatWalkingStatByUserManager from "./components/listers/UserWalkingStatWalkingStatByUserCards"
-import UserWalkingStatWalkingStatByUserDetail from "./components/listers/UserWalkingStatWalkingStatByUserDetail"
+import UserwalkingstatWalkingStatByUserManager from "./components/listers/UserwalkingstatWalkingStatByUserCards"
+import UserwalkingstatWalkingStatByUserDetail from "./components/listers/UserwalkingstatWalkingStatByUserDetail"
 
-import TeamWalkingStatWalkingStatByTeamManager from "./components/listers/TeamWalkingStatWalkingStatByTeamCards"
-import TeamWalkingStatWalkingStatByTeamDetail from "./components/listers/TeamWalkingStatWalkingStatByTeamDetail"
+import TeamwalkingstatWalkingStatByTeamManager from "./components/listers/TeamwalkingstatWalkingStatByTeamCards"
+import TeamwalkingstatWalkingStatByTeamDetail from "./components/listers/TeamwalkingstatWalkingStatByTeamDetail"
 
-import CompanyWalkingStatWalkingStatByCompanyManager from "./components/listers/CompanyWalkingStatWalkingStatByCompanyCards"
-import CompanyWalkingStatWalkingStatByCompanyDetail from "./components/listers/CompanyWalkingStatWalkingStatByCompanyDetail"
+import CompanywalkingstatWalkingStatByCompanyManager from "./components/listers/CompanywalkingstatWalkingStatByCompanyCards"
+import CompanywalkingstatWalkingStatByCompanyDetail from "./components/listers/CompanywalkingstatWalkingStatByCompanyDetail"
 
 import ChallengeChallengeInfoManager from "./components/listers/ChallengeChallengeInfoCards"
 import ChallengeChallengeInfoDetail from "./components/listers/ChallengeChallengeInfoDetail"
 import ChallengeChallengeHstManager from "./components/listers/ChallengeChallengeHstCards"
 import ChallengeChallengeHstDetail from "./components/listers/ChallengeChallengeHstDetail"
 
-import CalculatePointPointStandardInfoManager from "./components/listers/CalculatePointPointStandardInfoCards"
-import CalculatePointPointStandardInfoDetail from "./components/listers/CalculatePointPointStandardInfoDetail"
+import CalculatepointPointStandardInfoManager from "./components/listers/CalculatepointPointStandardInfoCards"
+import CalculatepointPointStandardInfoDetail from "./components/listers/CalculatepointPointStandardInfoDetail"
 
 
 export default new Router({
@@ -39,14 +39,14 @@ export default new Router({
     base: process.env.BASE_URL,
     routes: [
             {
-                path: '/walkingHistories/walkingHsts',
-                name: 'WalkingHistoryWalkingHstManager',
-                component: WalkingHistoryWalkingHstManager
+                path: '/walkinghistories/walkingHsts',
+                name: 'WalkinghistoryWalkingHstManager',
+                component: WalkinghistoryWalkingHstManager
             },
             {
-                path: '/walkingHistories/walkingHsts/:id',
-                name: 'WalkingHistoryWalkingHstDetail',
-                component: WalkingHistoryWalkingHstDetail
+                path: '/walkinghistories/walkingHsts/:id',
+                name: 'WalkinghistoryWalkingHstDetail',
+                component: WalkinghistoryWalkingHstDetail
             },
 
             {
@@ -82,36 +82,36 @@ export default new Router({
             },
 
             {
-                path: '/userWalkingStats/walkingStatByUsers',
-                name: 'UserWalkingStatWalkingStatByUserManager',
-                component: UserWalkingStatWalkingStatByUserManager
+                path: '/userwalkingstats/walkingStatByUsers',
+                name: 'UserwalkingstatWalkingStatByUserManager',
+                component: UserwalkingstatWalkingStatByUserManager
             },
             {
-                path: '/userWalkingStats/walkingStatByUsers/:id',
-                name: 'UserWalkingStatWalkingStatByUserDetail',
-                component: UserWalkingStatWalkingStatByUserDetail
-            },
-
-            {
-                path: '/teamWalkingStats/walkingStatByTeams',
-                name: 'TeamWalkingStatWalkingStatByTeamManager',
-                component: TeamWalkingStatWalkingStatByTeamManager
-            },
-            {
-                path: '/teamWalkingStats/walkingStatByTeams/:id',
-                name: 'TeamWalkingStatWalkingStatByTeamDetail',
-                component: TeamWalkingStatWalkingStatByTeamDetail
+                path: '/userwalkingstats/walkingStatByUsers/:id',
+                name: 'UserwalkingstatWalkingStatByUserDetail',
+                component: UserwalkingstatWalkingStatByUserDetail
             },
 
             {
-                path: '/companyWalkingStats/walkingStatByCompanies',
-                name: 'CompanyWalkingStatWalkingStatByCompanyManager',
-                component: CompanyWalkingStatWalkingStatByCompanyManager
+                path: '/teamwalkingstats/walkingStatByTeams',
+                name: 'TeamwalkingstatWalkingStatByTeamManager',
+                component: TeamwalkingstatWalkingStatByTeamManager
             },
             {
-                path: '/companyWalkingStats/walkingStatByCompanies/:id',
-                name: 'CompanyWalkingStatWalkingStatByCompanyDetail',
-                component: CompanyWalkingStatWalkingStatByCompanyDetail
+                path: '/teamwalkingstats/walkingStatByTeams/:id',
+                name: 'TeamwalkingstatWalkingStatByTeamDetail',
+                component: TeamwalkingstatWalkingStatByTeamDetail
+            },
+
+            {
+                path: '/companywalkingstats/walkingStatByCompanies',
+                name: 'CompanywalkingstatWalkingStatByCompanyManager',
+                component: CompanywalkingstatWalkingStatByCompanyManager
+            },
+            {
+                path: '/companywalkingstats/walkingStatByCompanies/:id',
+                name: 'CompanywalkingstatWalkingStatByCompanyDetail',
+                component: CompanywalkingstatWalkingStatByCompanyDetail
             },
 
             {
@@ -136,14 +136,14 @@ export default new Router({
             },
 
             {
-                path: '/calculatePoints/pointStandardInfos',
-                name: 'CalculatePointPointStandardInfoManager',
-                component: CalculatePointPointStandardInfoManager
+                path: '/calculatepoints/pointStandardInfos',
+                name: 'CalculatepointPointStandardInfoManager',
+                component: CalculatepointPointStandardInfoManager
             },
             {
-                path: '/calculatePoints/pointStandardInfos/:id',
-                name: 'CalculatePointPointStandardInfoDetail',
-                component: CalculatePointPointStandardInfoDetail
+                path: '/calculatepoints/pointStandardInfos/:id',
+                name: 'CalculatepointPointStandardInfoDetail',
+                component: CalculatepointPointStandardInfoDetail
             },
 
 
