@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import walkingstudio.WeatherApplication;
 import walkingstudio.domain.UsrtFcstHstUpdated;
@@ -11,6 +13,7 @@ import walkingstudio.domain.UsrtFcstHstUpdated;
 @Entity
 @Table(name = "WeatherStnInfo_table")
 @Data
+@AllArgsConstructor
 //<<< DDD / Aggregate Root
 public class WeatherStnInfo {
 

@@ -30,6 +30,11 @@ public class UsrtFcstHst {
 
     private String fcstValue;
 
+    @PostPersist
+    public void onPostPersist() {
+        System.out.println("hi");
+    }
+
     public static UsrtFcstHstRepository repository() {
         UsrtFcstHstRepository usrtFcstHstRepository = WeatherApplication.applicationContext.getBean(
             UsrtFcstHstRepository.class
