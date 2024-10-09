@@ -30,8 +30,8 @@ public class WeatherStnInfo {
 
     @PostPersist
     public void onPostPersist() {
-        UsrtFcstHstUpdated usrtFcstHstUpdated = new UsrtFcstHstUpdated(this);
-        usrtFcstHstUpdated.publishAfterCommit();
+        // UsrtFcstHstUpdated usrtFcstHstUpdated = new UsrtFcstHstUpdated(this);
+        // usrtFcstHstUpdated.publishAfterCommit();
     }
 
     public static WeatherStnInfoRepository repository() {
