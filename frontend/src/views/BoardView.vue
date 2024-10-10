@@ -64,24 +64,21 @@ const weatherData = ref({
 // API 요청 함수 정의
 const fetchWeatherData = async () => {
   try {
-    const response = await axios.get("http://4.230.151.151:8080/usrtFcstHsts/search/findByNxAndNy", {
+    const response = await axios.get("http://4.230.151.151:8080/usrtFcstHsts/search/findAllByNxAndNy", {
       params: {
         nx: 60,
         ny: 127,
       },
     });
-
-    console.log(response);
     
-
     // API 응답 데이터를 weatherData에 할당
     weatherData.value = {
-      baseDate: response.data.baseDate,
-      baseTime: response.data.baseTime,
-      t1h: response.data.t1h || "N/A",
-      reh: response.data.reh || "N/A",
-      wsd: response.data.wsd || "N/A",
-      rn1: response.data.rn1 || "N/A",
+      baseDate: response.data._embedded.usrtFcstHsts[0].baseDate,
+      baseTime: response.data._embedded.usrtFcstHsts[0].baseTime,
+      t1h: response.data._embedded.usrtFcstHsts[3].fcstValue || "N/A",
+      reh: response.data._embedded.usrtFcstHsts[1].fcstValue || "N/A",
+      wsd: response.data._embedded.usrtFcstHsts[7].fcstValue || "N/A",
+      rn1: response.data._embedded.usrtFcstHsts[2].fcstValue || "N/A",
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
