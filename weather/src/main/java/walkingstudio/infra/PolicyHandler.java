@@ -106,7 +106,8 @@ public class PolicyHandler {
                 if (weatherResponses != null && !weatherResponses.isEmpty()) {
                 //   saveWeatherResponses(weatherResponses, w);
                     for (WeatherResponse weatherResponse : weatherResponses) {
-                        UsrtFcstHst usrtFcstHst = usrtFcstHstRepository.findByNxAndNy(weatherRequest.getNx(), weatherRequest.getNy()).orElse(new UsrtFcstHst());
+                        UsrtFcstHst usrtFcstHst = usrtFcstHstRepository.findByNxAndNyAndCategory(weatherRequest.getNx(), weatherRequest.getNy(), weatherResponse.getCategory())
+                            .orElse(new UsrtFcstHst());
 
                         usrtFcstHst.setFcstValue(weatherResponse.getObsrValue());
                         usrtFcstHst.setBaseDate(weatherResponse.getBaseDate());

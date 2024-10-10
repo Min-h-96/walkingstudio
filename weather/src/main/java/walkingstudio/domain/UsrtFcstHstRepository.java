@@ -14,5 +14,7 @@ import walkingstudio.domain.*;
 )
 public interface UsrtFcstHstRepository
     extends PagingAndSortingRepository<UsrtFcstHst, String> {
-        Optional<UsrtFcstHst> findByNxAndNy(Integer nx, Integer ny);
+        Optional<UsrtFcstHst> findByNxAndNyAndCategory(Integer nx, Integer ny, String category);
+
+        Optional<List<UsrtFcstHst>> findAllByNxAndNy(Integer nx, Integer ny);
     }
