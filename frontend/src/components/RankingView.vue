@@ -15,42 +15,68 @@ const userInfo = userStore.userInfo;
 
 console.log(userInfo);
 
-// 걸음 수 상태를 위한 ref
-const personalWalking = ref(0);
+const personalWalking = ref(0); // 개인 걸음 수
+const totalUsers = ref(0); // 총 사용자 수
+const userRanking = ref(0); // 개인 랭킹
 let intervalId = null;
 
-const fetchPersonalWalkingData = async () => {
+const fetchPersonalStatData = async () => {
     try {
         const now = new Date();
-        const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
-        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const baseDate = `${year}${month}01`;
 
-        // API 호출로 개인 걸음 수 가져오기
-        const response = await axios.get("http://localhost:8080/api/stat/walk/personal", {
+        const response = await axios.get("http://4.230.151.151:8080/users/userPersonalStat", {
             params: {
                 pUserId: userInfo.puserId,
-                startDate: startDate,
-                endDate: endDate,
+                baseDate: baseDate,
             },
         });
 
         if (response.data) {
-            personalWalking.value = response.data; // 걸음 수 업데이트
+            console.log(response.data);
+            personalWalking.value = response.data.walking; // 걸음 수 업데이트
+            totalUsers.value = response.data.total; // 총 사용자 수 업데이트
+            userRanking.value = response.data.ranking; // 랭킹 업데이트
         }
     } catch (error) {
-        console.error("걸음 수 데이터를 불러오는 중 오류 발생:", error);
+        console.error("개인 통계 데이터를 불러오는 중 오류 발생:", error);
     }
 };
+
+// const fetchPersonalWalkingData = async () => {
+//     try {
+//         const now = new Date();
+//         const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+//         const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+
+//         // API 호출로 개인 걸음 수 가져오기
+//         const response = await axios.get("http://localhost:8080/api/stat/walk/personal", {
+//             params: {
+//                 pUserId: userInfo.puserId,
+//                 startDate: startDate,
+//                 endDate: endDate,
+//             },
+//         });
+
+//         if (response.data) {
+//             personalWalking.value = response.data; // 걸음 수 업데이트
+//         }
+//     } catch (error) {
+//         console.error("걸음 수 데이터를 불러오는 중 오류 발생:", error);
+//     }
+// };
 
 onMounted(() => {
     if (!userInfo) {
         router.push("/");
     } else {
         // 페이지가 마운트되면 처음으로 데이터 불러오기
-        fetchPersonalWalkingData();
+        fetchPersonalStatData();
 
         // 5초마다 데이터 갱신
-        intervalId = setInterval(fetchPersonalWalkingData, 5000);
+        intervalId = setInterval(fetchPersonalStatData, 5000);
     }
 });
 
@@ -87,9 +113,9 @@ onBeforeUnmount(() => {
                     <h2 class="">내 위치</h2>
                     <p class="desc">서울특별시</p>
                     <div class="row-box rank-box">
-                        <div class="mine row-box">6등</div>
+                        <div class="mine row-box">{{ userRanking }}등</div>
                         <div class="sign row-box">/</div>
-                        <div class="all row-box">100명</div>
+                        <div class="all row-box">{{ totalUsers }}명</div>
                     </div>
                 </div>
             </div>

@@ -80,7 +80,7 @@ spring:
         - id: userwalkingstat
           uri: http://userwalkingstat:8080
           predicates:
-            - Path=/walkingStatByUsers/**, 
+            - Path=/walkingStatByUsers/**, /userPersonalStat/**,
         - id: teamwalkingstat
           uri: http://teamwalkingstat:8080
           predicates:

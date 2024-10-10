@@ -20,5 +20,8 @@ public interface WalkingStatByUserRepository
 
   Optional<WalkingStatByUser> findBypUserIdAndBaseDate(@Param("pUserId") String pUserId, @Param("baseDate") Date baseDate);
 
+  @Query("SELECT COUNT(w) + 1 FROM WalkingStatByUser w WHERE w.baseDate = :baseDate AND w.walking > (SELECT u.walking FROM WalkingStatByUser u WHERE u.pUserId = :pUserId AND u.baseDate = :baseDate)")
+  int calculateUserRanking(@Param("pUserId") String pUserId, @Param("baseDate") Date baseDate);
+
 }
 
