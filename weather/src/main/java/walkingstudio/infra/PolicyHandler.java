@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class PolicyHandler {
     public void whatever(@Payload String eventString) {}
 
     @Scheduled(fixedDelay = 10000)
-    public void test() {
+    public void requestWeatherInfo() {
         String baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String baseTime = LocalTime.now().withMinute(0).format(DateTimeFormatter.ofPattern("HH00"));
         
@@ -104,6 +105,21 @@ public class PolicyHandler {
         
                 if (weatherResponses != null && !weatherResponses.isEmpty()) {
                 //   saveWeatherResponses(weatherResponses, w);
+                    for (WeatherResponse weatherResponse : weatherResponses) {
+                        UsrtFcstHst usrtFcstHst = usrtFcstHstRepository.findByNxAndNy(weatherRequest.getNx(), weatherRequest.getNy()).orElse(new UsrtFcstHst());
+
+                        usrtFcstHst.setFcstValue(weatherResponse.getObsrValue());
+                        usrtFcstHst.setBaseDate(weatherResponse.getBaseDate());
+                        usrtFcstHst.setBaseTime(weatherResponse.getBaseTime());
+                        usrtFcstHst.setNx(weatherResponse.getNx());
+                        usrtFcstHst.setNy(weatherResponse.getNy());
+                        usrtFcstHst.setCategory(weatherResponse.getCategory());;
+                        // usrtFcstHst.setCretDt(LocalDateTime.now());
+                        // usrtFcstHst.setCretIp("127.0.0.1");
+                        usrtFcstHstRepository.save(usrtFcstHst);
+                    }
+                    
+
                 } else {
                 //   log.warn("No data received for station (nx: {}, ny: {})", station.getNx(), station.getNy());
                 }

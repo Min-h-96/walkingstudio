@@ -14,6 +14,9 @@ import walkingstudio.WeatherApplication;
 public class UsrtFcstHst {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private String baseDate;
 
     private String baseTime;
@@ -32,7 +35,8 @@ public class UsrtFcstHst {
 
     @PostPersist
     public void onPostPersist() {
-        System.out.println("hi");
+        UsrtFcstHstUpdated usrtFcstHstUpdated = new UsrtFcstHstUpdated(this);
+        usrtFcstHstUpdated.publishAfterCommit();
     }
 
     public static UsrtFcstHstRepository repository() {

@@ -11,6 +11,7 @@ import walkingstudio.infra.AbstractEvent;
 @ToString
 public class UsrtFcstHstUpdated extends AbstractEvent {
 
+    private Long id;
     private Date baseDate;
     private String baseTime;
     private Integer nx;
@@ -18,8 +19,8 @@ public class UsrtFcstHstUpdated extends AbstractEvent {
     private String category;
     private String fcstValue;
 
-    public UsrtFcstHstUpdated(WeatherStnInfo aggregate) {
-        super(aggregate);
+    public UsrtFcstHstUpdated(UsrtFcstHst usrtFcstHst) {
+        super(usrtFcstHst);
     }
 
     public UsrtFcstHstUpdated() {
