@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: weather
-          image: "minhyukchoi/weather:241008"
+          image: "minhyukchoi/weather:241010"
           ports:
             - containerPort: 8080
           readinessProbe:
