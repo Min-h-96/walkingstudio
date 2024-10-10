@@ -64,12 +64,15 @@ const weatherData = ref({
 // API 요청 함수 정의
 const fetchWeatherData = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/weather/info", {
+    const response = await axios.get("http://localhost:8080/usrtFcstHsts/search/findByNxAndNy", {
       params: {
         nx: 60,
         ny: 127,
       },
     });
+
+    console.log(response);
+    
 
     // API 응답 데이터를 weatherData에 할당
     weatherData.value = {
