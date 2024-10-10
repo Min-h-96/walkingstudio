@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: "namahoon/user:24101001"
+          image: "namahoon/user:24101002"
           ports:
             - containerPort: 8080
           readinessProbe:
