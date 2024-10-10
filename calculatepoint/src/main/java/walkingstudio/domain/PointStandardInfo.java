@@ -16,6 +16,9 @@ import walkingstudio.domain.WeatherInfoUpdated;
 public class PointStandardInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private Date baseDate;
 
     private String baseTime;
@@ -24,15 +27,20 @@ public class PointStandardInfo {
 
     private Integer ny;
 
+    private Boolean t1h = false;
+
+    private Boolean wsd = false;
+
+    private Boolean reh = false;
+
+    private Boolean rn1 = false;
+
     private Double weight;
 
     @PostPersist
     public void onPostPersist() {
-        PointCalculated pointCalculated = new PointCalculated(this);
-        pointCalculated.publishAfterCommit();
-
-        WeatherInfoUpdated weatherInfoUpdated = new WeatherInfoUpdated(this);
-        weatherInfoUpdated.publishAfterCommit();
+        // PointCalculated pointCalculated = new PointCalculated(this);
+        // pointCalculated.publishAfterCommit();
     }
 
     public static PointStandardInfoRepository repository() {
@@ -47,24 +55,50 @@ public class PointStandardInfo {
         UsrtFcstHstUpdated usrtFcstHstUpdated
     ) {
         //implement business logic here:
+        repository().findByNxAndNy(usrtFcstHstUpdated.getNx(), usrtFcstHstUpdated.getNy())
+            .ifPresentOrElse(pointStandardInfo -> {
+                if (usrtFcstHstUpdated.getCategory() == "T1H") {
+                    if (pointStandardInfo.getT1h()) {
+                        if (Double.valueOf(usrtFcstHstUpdated.getFcstValue()) >= 20.0) {
+                            pointStandardInfo.setT1h(true);
+                            pointStandardInfo.setWeight(pointStandardInfo.getWeight() + 0.1);
+                        }
+                    } else {
+                        if (Double.valueOf(usrtFcstHstUpdated.getFcstValue()) < 20.0) {
+                            pointStandardInfo.setT1h(false);
+                            pointStandardInfo.setWeight(pointStandardInfo.getWeight() - 0.1);
+                        }
+                    }
+                    repository().save(pointStandardInfo);
+                
+                    WeatherInfoUpdated weatherInfoUpdated = new WeatherInfoUpdated(pointStandardInfo);
+                    weatherInfoUpdated.publishAfterCommit();
+                }
+            }, () -> {
+                PointStandardInfo pointStandardInfo = new PointStandardInfo();
 
-        /** Example 1:  new item 
-        PointStandardInfo pointStandardInfo = new PointStandardInfo();
-        repository().save(pointStandardInfo);
+                pointStandardInfo.setBaseDate(usrtFcstHstUpdated.getBaseDate());
+                pointStandardInfo.setBaseTime(usrtFcstHstUpdated.getBaseTime());
+                pointStandardInfo.setNx(usrtFcstHstUpdated.getNx());
+                pointStandardInfo.setNy(usrtFcstHstUpdated.getNy());
+                Double weight = 1.0;
 
-        */
+                if (usrtFcstHstUpdated.getCategory() == "T1H") {
+                    if (!pointStandardInfo.getT1h()) {
+                        if (Double.valueOf(usrtFcstHstUpdated.getFcstValue()) >= 20.0) {
+                            pointStandardInfo.setT1h(true);
+                            weight += 0.1;
+                        }
+                    }
+                }
 
-        /** Example 2:  finding and process
-        
-        repository().findById(usrtFcstHstUpdated.get???()).ifPresent(pointStandardInfo->{
-            
-            pointStandardInfo // do something
-            repository().save(pointStandardInfo);
+                pointStandardInfo.setWeight(weight);
 
+                repository().save(pointStandardInfo);
 
-         });
-        */
-
+                WeatherInfoUpdated weatherInfoUpdated = new WeatherInfoUpdated(pointStandardInfo);
+                weatherInfoUpdated.publishAfterCommit();
+        });
     }
 
     //>>> Clean Arch / Port Method

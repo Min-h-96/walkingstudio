@@ -16,6 +16,10 @@ public class WeatherInfoUpdated extends AbstractEvent {
     private Integer nx;
     private Integer ny;
     private Double weight;
+    private Boolean t1h;
+    private Boolean wsd;
+    private Boolean reh;
+    private Boolean rn1;
 
     public WeatherInfoUpdated(PointStandardInfo aggregate) {
         super(aggregate);
