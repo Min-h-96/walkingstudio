@@ -9,7 +9,7 @@ import walkingstudio.UserwalkingstatApplication;
 import walkingstudio.domain.UserStatUpdated;
 
 @Entity
-@Table(name = "WalkingStatByUser_table")
+@Table(name = "WalkingStatByUser")
 @Data
 //<<< DDD / Aggregate Root
 public class WalkingStatByUser {
@@ -20,8 +20,6 @@ public class WalkingStatByUser {
     private Date baseDate;
 
     private Integer walking;
-
-    private Integer ranking;
 
     @PostPersist
     public void onPostPersist() {

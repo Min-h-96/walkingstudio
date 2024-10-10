@@ -21,6 +21,9 @@ import walkingstudio.domain.WalkUpdated;
 //<<< DDD / Aggregate Root
 public class WalkingHst {
 
+    @Transient
+    private boolean eventPublished = false;
+
     @Id
     @Column(name = "p_user_id", length = 30)
     private String pUserId;
@@ -57,24 +60,33 @@ public class WalkingHst {
     @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
-
-    @PrePersist
-    public void onPrePersist() {
-        log.info("PrePersist called: Entity is about to be persisted. {}", this.toString());
-    }
-
     @PostPersist
     public void onPostPersist() {
-        WalkUpdated walkUpdated = new WalkUpdated(this);
-        walkUpdated.publishAfterCommit();
+        log.info("PostPersist called: Entity has been persisted. {}", this.toString());
+        publishWalkEvent();
     }
 
+    @PostUpdate
+    public void onPostUpdate() {
+        log.info("PostUpdate called: Entity has been updated. {}", this.toString());
+        publishWalkEvent();
+    }
 
     public static WalkingHstRepository repository() {
         WalkingHstRepository walkingHstRepository = WalkinghistoryApplication.applicationContext.getBean(
             WalkingHstRepository.class
         );
         return walkingHstRepository;
+    }
+
+    // 생성과 업데이트에서 공통으로 호출되는 이벤트 발행 메서드
+    private void publishWalkEvent() {
+        // 이벤트가 이미 발행된 경우, 중복 발행을 방지
+        if (!eventPublished) {
+            WalkUpdated walkUpdated = new WalkUpdated(this);
+            walkUpdated.publishAfterCommit();
+            eventPublished = true; // 이벤트가 발행된 후 플래그를 설정
+        }
     }
 }
 //>>> DDD / Aggregate Root
