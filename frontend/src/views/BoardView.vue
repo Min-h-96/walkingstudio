@@ -64,7 +64,7 @@ const weatherData = ref({
 // API 요청 함수 정의
 const fetchWeatherData = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/usrtFcstHsts/search/findByNxAndNy", {
+    const response = await axios.get("http://4.230.151.151:8080/usrtFcstHsts/search/findByNxAndNy", {
       params: {
         nx: 60,
         ny: 127,

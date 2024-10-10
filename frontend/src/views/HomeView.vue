@@ -18,8 +18,10 @@ const handleComplete = async () => {
   try {
     // OTP 값을 가져와서 API 요청
     const otp = value.value.join(""); // 배열로 되어있는 OTP 값을 문자열로 변환
-    const response = await axios.get("http://4.230.151.151:8080/users/search/findByOtp", {
-      otp,
+    const response = await axios.get(`http://4.230.151.151:8080/users/search/findByOtp`, {
+      params: {
+        otp: otp, // 쿼리 파라미터로 전달
+      },
     });
     console.log(response);
 
