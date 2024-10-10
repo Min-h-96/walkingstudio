@@ -118,6 +118,9 @@ public class PolicyHandler {
                         // usrtFcstHst.setCretDt(LocalDateTime.now());
                         // usrtFcstHst.setCretIp("127.0.0.1");
                         usrtFcstHstRepository.save(usrtFcstHst);
+
+                        UsrtFcstHstUpdated usrtFcstHstUpdated = new UsrtFcstHstUpdated(usrtFcstHst);
+                        usrtFcstHstUpdated.publishAfterCommit();
                     }
                     
 

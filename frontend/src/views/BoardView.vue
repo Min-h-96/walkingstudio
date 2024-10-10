@@ -61,6 +61,10 @@ const weatherData = ref({
   rn1: "", // 강수량
 });
 
+const weatherWeight = ref({
+  weight: 1.0,
+})
+
 // API 요청 함수 정의
 const fetchWeatherData = async () => {
   try {
@@ -85,8 +89,28 @@ const fetchWeatherData = async () => {
   }
 };
 
+const fetchWeatherWeight = async () => {
+  try {
+    const response = await axios.get("http://4.230.151.151:8080/pointStandardInfos/search/findByNxAndNy", {
+      params: {
+        nx: 60,
+        ny: 127,
+      },
+    });
+
+    console.log(response.data);    
+
+    weatherWeight.value = {
+      weight: response.data.weight
+    }
+  } catch (error) {
+    console.error("Error fetching weather weight:", error);
+  }
+}
+
 onMounted(() => {
   fetchWeatherData();
+  fetchWeatherWeight();
 });
 </script>
 
@@ -133,7 +157,7 @@ onMounted(() => {
         </div>
         <div class="row-box boost-box">
           <div class="row-box view">
-            <div class="mine row-box">1.24P</div>
+            <div class="mine row-box">{{ weatherWeight.weight }}P</div>
             <div class="sign row-box">/</div>
             <div class="all row-box">1걸음</div>
           </div>
