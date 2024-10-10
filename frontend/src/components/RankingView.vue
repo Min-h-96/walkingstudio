@@ -27,7 +27,7 @@ const fetchPersonalStatData = async () => {
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const baseDate = `${year}${month}01`;
 
-        const response = await axios.get("http://4.230.151.151:8080/users/userPersonalStat", {
+        const response = await axios.get("http://4.230.151.151:8080/userPersonalStat", {
             params: {
                 pUserId: userInfo.puserId,
                 baseDate: baseDate,

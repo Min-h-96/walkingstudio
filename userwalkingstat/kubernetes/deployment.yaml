@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: userwalkingstat
-          image: "namahoon/userwalkingstat:24101001"
+          image: "namahoon/userwalkingstat:24101003"
           ports:
             - containerPort: 8080
           readinessProbe:

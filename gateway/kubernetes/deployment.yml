@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: namahoon/gateway:24101001
+          image: namahoon/gateway:24101002
           ports:
             - containerPort: 8080

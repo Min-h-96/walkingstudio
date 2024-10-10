@@ -9,7 +9,7 @@ import walkingstudio.UserwalkingstatApplication;
 import walkingstudio.domain.UserStatUpdated;
 
 @Entity
-@Table(name = "WalkingStatByUser")
+@Table(name = "WalkingStatByUser", schema = "walk")
 @Data
 //<<< DDD / Aggregate Root
 public class WalkingStatByUser {
