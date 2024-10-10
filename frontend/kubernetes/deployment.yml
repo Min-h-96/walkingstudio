@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: namahoon/frontend:24101014
+          image: namahoon/frontend:24101015
           ports:
             - containerPort: 8080
           readinessProbe:

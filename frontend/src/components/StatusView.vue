@@ -20,7 +20,7 @@ let pollingInterval;
 // 상태체크
 async function fetchWalkingData() {
     try {
-        const response = await axios.post("http://localhost:8080/api/stat/walk", {
+        const response = await axios.post("http://4.230.151.151:8080/walkingHsts/todayStat", {
             pUserId: userInfo.puserId,
             baseDate: new Date().toISOString().split("T")[0].replace(/-/g, ""),
         });
