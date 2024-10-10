@@ -16,7 +16,7 @@ import walkingstudio.dto.WalkCollectRequest;
 
 @RestController
 // @RequestMapping(value="/walkingHsts")
-@Transactional
+//@Transactional
 public class WalkingHstController {
 
     @Autowired

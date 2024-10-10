@@ -8,6 +8,7 @@ import javax.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import walkingstudio.WalkinghistoryApplication;
 import walkingstudio.domain.WalkUpdated;
 
@@ -16,6 +17,7 @@ import walkingstudio.domain.WalkUpdated;
 @IdClass(WalkingHstId.class)
 @Getter
 @Setter
+@Slf4j
 //<<< DDD / Aggregate Root
 public class WalkingHst {
 
@@ -55,11 +57,18 @@ public class WalkingHst {
     @Column(name = "mod_dt")
     private LocalDateTime modDt;
 
+
+    @PrePersist
+    public void onPrePersist() {
+        log.info("PrePersist called: Entity is about to be persisted. {}", this.toString());
+    }
+
     @PostPersist
     public void onPostPersist() {
         WalkUpdated walkUpdated = new WalkUpdated(this);
         walkUpdated.publishAfterCommit();
     }
+
 
     public static WalkingHstRepository repository() {
         WalkingHstRepository walkingHstRepository = WalkinghistoryApplication.applicationContext.getBean(
