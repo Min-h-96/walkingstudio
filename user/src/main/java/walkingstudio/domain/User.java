@@ -1,33 +1,74 @@
 package walkingstudio.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import walkingstudio.UserApplication;
 import walkingstudio.domain.RewardSuccessed;
 
 @Entity
-@Table(name = "User_table")
+@Table(name = "user_info", schema= "walk")
 @Data
+@Getter
+@Setter
 //<<< DDD / Aggregate Root
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long pUserId;
+    @Column(name = "p_user_id", length = 30, nullable = false)
+    private String pUserId;
 
-    private String pUserName;
+    @Column(name = "com_user_id", length = 30)
+    private String comUserId;
 
+    @Column(name = "com_id", length = 30)
     private String comId;
 
+    @Column(name = "group_id", length = 30)
+    private String groupId;
+
+    @Column(name = "group_name", length = 30)
+    private String groupName;
+
+    @Column(name = "team_id", length = 30)
     private String teamId;
 
+    @Column(name = "otp", length = 6)
     private String otp;
 
-    private String point;
+    @Column(name = "point")
+    private Double point;
 
+    @Column(name = "cret_ip", length = 30)
+    private String cretIp;
+
+    @Column(name = "cret_dt")
+    private LocalDateTime cretDt;
+
+    @Column(name = "mod_ip", length = 30)
+    private String modIp;
+
+    @Column(name = "mod_dt")
+    private LocalDateTime modDt;
+
+    @Column(name = "use_yn")
+    private Boolean useYn;
+
+    @Column(name = "p_user_name", length = 30)
+    private String pUserName;
+
+    @ManyToOne
+    @JoinColumn(name = "com_id", insertable = false, updatable = false)
+    private ComInfo comInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id", insertable = false, updatable = false)
+    private TeamInfo teamInfo;
     @PostPersist
     public void onPostPersist() {
         RewardSuccessed rewardSuccessed = new RewardSuccessed(this);
