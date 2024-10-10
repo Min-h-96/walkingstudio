@@ -18,20 +18,20 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: username/frontend:latest
+          image: namahoon/frontend:24101001
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: '/'
               port: 8080
             initialDelaySeconds: 10
             timeoutSeconds: 2
             periodSeconds: 5
-            failureThreshold: 10
+            failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: '/'
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
