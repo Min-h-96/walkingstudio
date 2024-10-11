@@ -132,5 +132,303 @@
 
 ## 구현
 
+#### DDD 의 적용
+
+- 각 서비스 내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였습니다.
+
+```Java
+package walkingstudio.domain;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.*;
+import lombok.Data;
+import walkingstudio.CalculatepointApplication;
+import walkingstudio.domain.PointCalculated;
+import walkingstudio.domain.WeatherInfoUpdated;
+
+@Entity
+@Table(name = "PointStandardInfo_table")
+@Data
+//<<< DDD / Aggregate Root
+public class PointStandardInfo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private Date baseDate;
+
+    private String baseTime;
+
+    private Integer nx;
+
+    private Integer ny;
+
+    private Boolean t1h = false;
+
+    private Boolean wsd = false;
+
+    private Boolean reh = false;
+
+    private Boolean rn1 = false;
+
+    private Double weight;
+
+    @PostPersist
+    public void onPostPersist() {
+    }
+
+    public static PointStandardInfoRepository repository() {
+        PointStandardInfoRepository pointStandardInfoRepository = CalculatepointApplication.applicationContext.getBean(
+            PointStandardInfoRepository.class
+        );
+        return pointStandardInfoRepository;
+    }
+
+    //<<< Clean Arch / Port Method
+    public static void updateWeatherInfo(
+        UsrtFcstHstUpdated usrtFcstHstUpdated
+    ) {
+        //implement business logic here:
+    }
+
+    //>>> Clean Arch / Port Method
+    //<<< Clean Arch / Port Method
+    public static void calculatePoint(WalkUpdated walkUpdated) {
+        //implement business logic here:
+    }
+    //>>> Clean Arch / Port Method
+
+}
+//>>> DDD / Aggregate Root
+```
+
+- Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 데이터 소스 유형에 대한 별도의 처리가 없도록 했습니다. (현재는 테스트용으로 H2, PostgreSQL 사용)
+
+```Java
+package walkingstudio.domain;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import walkingstudio.domain.*;
+import java.util.Date;
+import java.util.Optional;
+
+//<<< PoEAA / Repository
+@RepositoryRestResource(
+    collectionResourceRel = "pointStandardInfos",
+    path = "pointStandardInfos"
+)
+public interface PointStandardInfoRepository
+    extends PagingAndSortingRepository<PointStandardInfo, Date> {
+        Optional<PointStandardInfo> findByNxAndNy(Integer nx, Integer ny);
+    }
+```
+
+#### Req/Resp 방식의 동기식 아키텍처
+
+분석 단계에서의 조건 중 하나로 "도전 과제 보상 요청(challenge)" -> "걸음 수 확인(walking)" 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리했습니다.
+비동기로 처리할 경우 사용자에게 포인트가 먼저 제공되고 문제가 발생했을 때 회수하는 과정을 거칠 경우, 사용자가 불쾌감을 느낄 수 있다고 판단했기 때문입니다.
+
+#### Event Drive 방식의 비동기식 아키텍처
+
+"걸음 수 수집" -> "걸음 수 저장/통계" 로직의 경우,
+내부 로직이 블로킹 되지 않도록 Pub/Sub 방식을 활용한 비동기식 호출 처리했습니다.
+
+- 걸음 수가 수집이 되면, 곧바로 수집 됐다는 도메인 이벤트를 카프카로 전송합니다.(Publish)
+
+```Java
+package walkingstudio.domain;
+
+@Entity
+@Table(name = "walking_hst", schema = "walk")
+@IdClass(WalkingHstId.class)
+@Getter
+@Setter
+@Slf4j
+//<<< DDD / Aggregate Root
+public class WalkingHst {
+  ...
+
+    // 생성과 업데이트에서 공통으로 호출되는 이벤트 발행 메서드
+    private void publishWalkEvent() {
+        // 이벤트가 이미 발행된 경우, 중복 발행을 방지
+        if (!eventPublished) {
+            WalkUpdated walkUpdated = new WalkUpdated(this);
+            walkUpdated.publishAfterCommit();
+            eventPublished = true; // 이벤트가 발행된 후 플래그를 설정
+        }
+    }
+}
+```
+
+- 걸음 수 저장/통계 서버에서는 수집 이벤트를 수신하여 자신의 정책(로직)을 처리하도록 PolcyHandler 를 구현했습니다.
+
+```Java
+package walkingstudio.infra;
+
+//<<< Clean Arch / Inbound Adaptor
+@Service
+@Transactional
+public class PolicyHandler {
+
+  ...
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='WalkUpdated'"
+    )
+    public void wheneverWalkUpdated_UpdateWalk(
+        @Payload WalkUpdated walkUpdated
+    ) {
+        // pUserId와 baseDate가 일치하는 레코드 조회
+        String pUserId = walkUpdated.getPUserId();
+        // baseDate는 월 기준으로 고정 (해당 월의 첫 날로 설정)
+        LocalDate firstDayOfMonth = LocalDate.parse(walkUpdated.getBaseDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
+            .withDayOfMonth(1);
+        Date baseDate = java.sql.Date.valueOf(firstDayOfMonth);
+
+        Optional<WalkingStatByUser> existingStat = walkingStatByUserRepository.findBypUserIdAndBaseDate(pUserId, baseDate);
+
+        if (existingStat.isPresent()) {
+            // 기존 데이터가 있을 경우 walking 값 업데이트
+            ...
+        } else {
+            // 기존 데이터가 없을 경우 새로운 데이터 생성
+            ...
+        }
+    }
+}
+```
+
+걸음 수 저장/통계 사이트가 유지보수 또는 장애발생으로 잠시 내려간 상태여도 사용자의 걸음 수 데이터를 수집하는 데에는 문제가 없게 됩니다.
+
+#### Scheduler
+
+날씨 데이터의 경우 주기적으로 공공 데이터 포털에 요청을 해야했습니다. 별도의 서버를 두고 Scheduler 를 활용하여 주기적으로 요청을 보내고 응답을 받아 저장하고, 날씨 데이터가 업데이트 됐다는 이벤트를 Kafka 에 전달하여 다음 정책이 수행되도록 구현했습니다.
+
+```Java
+package walkingstudio.infra;
+
+@Service
+@Transactional
+public class PolicyHandler {
+
+  ...
+
+    @Scheduled(fixedDelay = 360000)
+    public void requestWeatherInfo() {
+
+      ...
+
+        for (WeatherStnInfo w : weatherStnInfos) {
+            WeatherRequest weatherRequest = new WeatherRequest();
+
+            weatherRequest.setBaseDate(baseDate);
+            weatherRequest.setBaseTime(baseTime);
+            weatherRequest.setNx(w.getNx());
+            weatherRequest.setNy(w.getNy());
+
+            // 공공데이터 포털 날씨 정보 API 호출
+            String url = String.format("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=%s&dataType=%s&numOfRows=%d&base_date=%s&base_time=%s&nx=%d&ny=%d",
+                weatherRequest.getServiceKey(),
+                weatherRequest.getDataType(),
+                weatherRequest.getNumOfRows(),
+                weatherRequest.getBaseDate(),
+                weatherRequest.getBaseTime(),
+                weatherRequest.getNx(),
+                weatherRequest.getNy()
+            );
+
+            try {
+                // HttpClient를 사용하여 API 요청
+                HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+                // 4. 요청 보내고 응답 받기
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                // 응답을 로그로 출력
+                // log.info("Response received from API: {}", response.body());
+
+                // 5. JSON 응답 파싱
+                List<WeatherResponse> weatherResponses = parseWeatherResponse(response.body());
+
+                ...
+
+                } else {}
+            } catch (Exception e) {}
+    }
+}
+```
+
+#### API Gateway
+
+Gateway 설정 파일
+
+```yaml
+server:
+  port: 8088
+---
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: walkinghistory
+          uri: http://walkinghistory:8080
+          predicates:
+            - Path=/walkingHsts/**,
+        - id: weather
+          uri: http://weather:8080
+          predicates:
+            - Path=/usrtFcstHsts/**, /weatherStnInfos/**,
+        - id: user
+          uri: http://user:8080
+          predicates:
+            - Path=/users/**,
+        - id: userwalkingstat
+          uri: http://userwalkingstat:8080
+          predicates:
+            - Path=/walkingStatByUsers/**, /userPersonalStat/**,
+        - id: teamwalkingstat
+          uri: http://teamwalkingstat:8080
+          predicates:
+            - Path=/walkingStatByTeams/**,
+        - id: companywalkingstat
+          uri: http://companywalkingstat:8080
+          predicates:
+            - Path=/walkingStatByCompanies/**,
+        - id: challenge
+          uri: http://challenge:8080
+          predicates:
+            - Path=/challengeInfos/**, /challengeHsts/**,
+        - id: calculatepoint
+          uri: http://calculatepoint:8080
+          predicates:
+            - Path=/pointStandardInfos/**,
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
+```
+
 ## 운영
 
