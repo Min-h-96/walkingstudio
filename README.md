@@ -432,3 +432,222 @@ server:
 
 ## 운영
 
+### CI/CD 설정
+
+- 전체 구성도
+
+```mermaid
+flowchart LR
+	repo((repo))
+	docker[Docker Hub]
+	K8S
+	
+	subgraph 형상관리
+	GitLab
+    GitLab -.pull.-> repo
+    repo -.push.-> GitLab
+	end
+	
+	repo -- 1 Source Build --> repo
+	
+	subgraph Dockerize
+    repo -- 2 image push --> docker
+	end
+	
+	repo -- 3 apply --> K8S
+	docker -. 4 image pull.-> K8S
+	K8S -- 5 deploy --> K8S
+	
+	
+
+	
+```
+
+- 형상관리
+
+  - GitLab
+
+    전체 모듈의 소스 형상 관리는 GitLab에서 관리된다.
+
+    ```shell
+    git clone https://github.com/Min-h-96/walkingstudio
+    ```
+
+  - repo
+
+    1. Source Build
+
+       - 각 Framework별 빌드 환경을 설정한다.
+
+         - Spring Boot / jdk15
+
+           ```shell
+           export JAVA_HOME=$(/usr/libexec/java_home -v 15)
+           ```
+
+         - Node.js 17.x
+
+           ```shell
+           export PATH=/path/to/nodejs17/bin:$PATH
+           ```
+
+       - 빌드 진행
+
+         - Spring Boot / jdk15
+
+           ```shell
+           mvn clean package
+           ```
+
+         - Node.js 17.x
+
+           ```shell
+           npm run build
+           ```
+
+- Dockerize
+
+  - repo
+
+    2. Image push
+
+       - Docker Hub 접속을 위한 환경을 세팅한다.
+
+         ```shell
+         docker login
+         ```
+
+       - Docker Image 생성
+
+         *Azure 배포환경에 맞게, linux/amd64로 이미지를 설정한다.
+
+         ```
+         docker build --platform linux/amd64 -t {{username}}/{{app_name}}:{{YYMMdd##}} . 
+         ```
+
+       - Docker Image Push
+
+         ```
+         docker push {{username}}/{{app_name}}:{{YYMMdd##}}
+         ```
+
+- Deploy
+
+  - repo
+
+    3. deployment apply
+
+       - 접속한 리소스 그룹 및 서비스에 대해 설정한다.
+
+         ```shell
+         ##login
+         az login
+         ##리소스 그룹 및 서비스 설정
+         az aks get-credentials --resource-group {{resource_group_name}} --name {{K8S_service_name}}
+         ```
+
+       - 배포할 모듈에 대하여, K8S deployment 생성
+
+         ```
+         cd {{app_name}}
+         kubectl apply -f kubernetes/deployment.yaml
+         ```
+
+  - K8S
+
+    4. image pull
+
+       - K8S Container 및 Pod 생성 후. 해당 image를 받아 적용한다.
+
+         - spring-boot-starter-actuator Plugin이 적용된 모듈의 deployment의 경우, actuator 관련 설정을 제외한다.
+
+           ```
+           <dependency>
+           	<groupId>org.springframework.boot</groupId>
+           	<artifactId>spring-boot-starter-actuator</artifactId>
+           </dependency>
+           ```
+
+    5. deploy
+
+       - 배포 완료 시, 파드 모니터링
+
+         ```
+         kubectl get pods
+         kubectl logs -f {{pod_name}}
+         ```
+
+
+
+### 부하 방지 설정
+
+- walkinghistory
+
+  모바일 클라이언트의 데이터 요청에 의해 수집을 담당하고 있는 모듈
+
+  - 많은 접속자 발생 시, 전체 서비스의 부하를 담당하고 있는 수집 모듈은 다중화 서버로 운영한다.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: walkinghistory
+  labels:
+    app: walkinghistory
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: walkinghistory
+```
+
+
+
+- userwalkingstat
+
+  데이터 요청마다 실시간성 통계를 제공하기 위해 ETL을 담당하고 있는 적재 모듈
+
+  - 많은 접속사 발생 시, RDB와 직접적으로 DDL작업을 수행하기 때문에 부하에 따른 스케일 조정이 필요
+
+    - 자원 할당 설정
+
+      ```
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: userwalkingstat
+        labels:
+          app: userwalkingstat
+          
+      ### ...
+                resources:
+                  requests:
+                    cpu: "500m"
+                    memory: "512Mi"
+                  limits:
+                    cpu: "1"
+                    memory: "1Gi"
+      
+      ```
+
+    - HPA 설정
+
+      ```
+      apiVersion: autoscaling/v1
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: userwalkingstat
+      spec:
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: userwalkingstat
+        minReplicas: 1
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 50
+      ```
+
+      
+
+
+
