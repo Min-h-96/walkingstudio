@@ -1,6 +1,6 @@
 # 워킹 스튜디오
 
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/fe95e0ae-c052-4c13-9cca-0fb62aab9975)
 
 ## 워킹 스튜디오(Walking Studio)
 본 프로젝트는 개별적인 기업들의 ESG 경영을 위한 탄소중립 컨텐츠를 통합한 전국단위 플랫폼을 목적으로 기획했습니다.
